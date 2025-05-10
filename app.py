@@ -7,6 +7,14 @@ DATA_FILE = "conditions.json"
 
 def load_conditions():
     if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, "r", encoding="utf-8") as f:
+            try:
+                return json.load(f)
+            except json.JSONDecodeError:
+                return []  # 비어 있거나 잘못된 경우 기본값
+    return []
+
+    if os.path.exists(DATA_FILE):
         with open(DATA_FILE) as f:
             return json.load(f)
     return []
@@ -15,21 +23,25 @@ def save_conditions(data):
     with open(DATA_FILE, "w") as f:
         json.dump(data, f, indent=2)
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route("/", methods=["GET", "POST"])
 def home():
-    if request.method == 'POST':
-        new = {
-            "origin": request.form['origin'],
-            "dests": request.form['dests'].split(','),
-            "dates": request.form['dates'].split(','),
-            "price": int(request.form['price']),
-            "email": request.form['email']
-        }
+    if request.method == "POST":
+        try:
+            new = {
+                "origin": request.form.get("origin", "").strip(),
+                "dests": request.form.get("dests", "").strip().split(","),
+                "dates": request.form.get("dates", "").strip().split(","),
+                "price": int(request.form.get("price", 0)),
+                "email": request.form.get("email", "").strip()
+            }
+        except Exception as e:
+            return f"입력 오류: {e}", 400
+
         data = load_conditions()
         data.append(new)
         save_conditions(data)
         return "조건 저장 완료!"
-    return render_template('form.html')
+    return render_template("form.html")
 
 @app.route('/check')
 def trigger():
