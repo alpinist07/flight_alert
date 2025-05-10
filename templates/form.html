@@ -14,42 +14,68 @@
 </head>
 <body>
   <h2 class="mb-4">항공권 가격 알림 등록</h2>
-  <form method="POST">
+  <form method="POST" onsubmit="return prepareForm()">
+
+    <!-- 출발지 선택 -->
     <div class="mb-3">
-      <label class="form-label">출발지 (공항코드)</label>
-      <input list="airport-codes" name="origin" class="form-control" required>
+      <label class="form-label">출발지</label>
+      <select class="form-select" id="origin-select" required>
+        <option value="">출발지를 선택하세요</option>
+        <option value="GMP">김포</option>
+        <option value="CJU">제주</option>
+        <option value="ICN">인천</option>
+        <option value="PUS">김해</option>
+        <option value="CJJ">청주</option>
+        <option value="TAE">대구</option>
+        <option value="MWX">무안</option>
+        <option value="YNY">양양</option>
+      </select>
+      <input type="hidden" name="origin" id="origin" />
     </div>
+
+    <!-- 도착지 선택 -->
     <div class="mb-3">
-      <label class="form-label">도착지 목록 (쉼표로)</label>
-      <input list="airport-codes" name="dests" class="form-control" required>
+      <label class="form-label">도착지 (복수 선택 가능)</label>
+      <div class="form-check" id="dest-group">
+        <input class="form-check-input" type="checkbox" value="GMP" id="destGMP">
+        <label class="form-check-label" for="destGMP">김포</label><br>
+        <input class="form-check-input" type="checkbox" value="CJU" id="destCJU">
+        <label class="form-check-label" for="destCJU">제주</label><br>
+        <input class="form-check-input" type="checkbox" value="ICN" id="destICN">
+        <label class="form-check-label" for="destICN">인천</label><br>
+        <input class="form-check-input" type="checkbox" value="PUS" id="destPUS">
+        <label class="form-check-label" for="destPUS">김해</label><br>
+        <input class="form-check-input" type="checkbox" value="CJJ" id="destCJJ">
+        <label class="form-check-label" for="destCJJ">청주</label><br>
+        <input class="form-check-input" type="checkbox" value="TAE" id="destTAE">
+        <label class="form-check-label" for="destTAE">대구</label><br>
+        <input class="form-check-input" type="checkbox" value="MWX" id="destMWX">
+        <label class="form-check-label" for="destMWX">무안</label><br>
+        <input class="form-check-input" type="checkbox" value="YNY" id="destYNY">
+        <label class="form-check-label" for="destYNY">양양</label>
+      </div>
+      <input type="hidden" name="dests" id="dests" />
     </div>
-    <datalist id="airport-codes">
-      <option value="ICN">
-      <option value="GMP">
-      <option value="CJU">
-      <option value="PUS">
-      <option value="NRT">
-      <option value="HND">
-      <option value="KIX">
-      <option value="SIN">
-      <option value="LAX">
-      <option value="JFK">
-    </datalist>
+
+    <!-- 나머지 필드 동일 (날짜, 가격, 이메일 등) -->
     <div class="mb-3">
       <label class="form-label">날짜 목록 (쉼표로)</label>
       <input type="date" id="datePicker" class="form-control">
       <button type="button" id="addDate" class="btn btn-outline-secondary btn-sm mt-1">날짜 추가</button>
       <input type="text" name="dates" id="dateList" class="form-control mt-2" readonly required>
     </div>
+
     <div class="mb-3">
       <label class="form-label">최대 가격 (₩)</label>
       <input type="range" class="form-range" min="50000" max="1000000" step="10000" id="priceRange">
       <input type="number" class="form-control" name="price" id="priceInput" required>
     </div>
+
     <div class="mb-3">
       <label class="form-label">이메일</label>
       <input type="email" name="email" class="form-control" required>
     </div>
+
     <button type="submit" class="btn btn-primary">제출</button>
   </form>
 
@@ -69,6 +95,19 @@
     $('#priceInput').on('input', function () {
       $('#priceRange').val(this.value);
     });
+
+    function prepareForm() {
+      // 출발지
+      const originVal = document.getElementById('origin-select').value;
+      document.getElementById('origin').value = originVal;
+
+      // 도착지
+      const checked = [...document.querySelectorAll('#dest-group input:checked')];
+      const codes = checked.map(el => el.value);
+      document.getElementById('dests').value = codes.join(',');
+
+      return true;
+    }
   </script>
 </body>
 </html>
