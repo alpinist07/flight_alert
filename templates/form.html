@@ -57,7 +57,7 @@
       <input type="hidden" name="dests" id="dests" />
     </div>
 
-    <!-- 나머지 필드 동일 (날짜, 가격, 이메일 등) -->
+    <!-- 날짜 -->
     <div class="mb-3">
       <label class="form-label">날짜 목록 (쉼표로)</label>
       <input type="date" id="datePicker" class="form-control">
@@ -65,12 +65,14 @@
       <input type="text" name="dates" id="dateList" class="form-control mt-2" readonly required>
     </div>
 
+    <!-- 가격 -->
     <div class="mb-3">
       <label class="form-label">최대 가격 (₩)</label>
       <input type="range" class="form-range" min="50000" max="1000000" step="10000" id="priceRange">
       <input type="number" class="form-control" name="price" id="priceInput" required>
     </div>
 
+    <!-- 이메일 -->
     <div class="mb-3">
       <label class="form-label">이메일</label>
       <input type="email" name="email" class="form-control" required>
